@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>  
+    <title>Salvar PDF</title>
+    <link rel="icon" href="http://www.propesq.ufpb.br/propesq/contents/imagens/pdf-icon.png/@@images/a432b13a-5ede-4c07-9cd3-2f53e71d3cc3.png">
+    <script src=" https://unpkg.com/jspdf@latest/dist/jspdf.min.js "></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.14/jquery.mask.js" integrity="sha256-MSX4yI2vk7OAJtFiO+sb9s8f4ufmgt/+2J/w5VfSB24=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.14/jquery.mask.min.js" integrity="sha256-W7rvX7ai1JsFAqhfSIJjVzy3F0qwOTg1dkm0AQdNSp8=" crossorigin="anonymous"></script>
+  <style>
+    fieldset{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 24px;
+            transform: translate(-50%, -50%);
+        }
+        #lista{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            width: 30%;
+            height: 50%;
+            position: absolute;
+            top: 50%;
+            left: -50%;
+            transform: translate(-50%, -50%);
+        }
+        .lado-a-lado{
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+        .field{
+            width: 150px;
+            height: 30px;
+            border: none;
+            border-bottom: 1px solid #000;
+            outline: none;
+            margin: 10px;
+        }
+        .btn{
+            width: 100px;
+            height: 40px;
+            background: #34495e;
+            border: 1px solid white;
+            color: white;
+            border-radius: 24px;
+            outline: none;
+            cursor: pointer;
+        }
+        .btn:active{
+            border: 1px solid #34495e;
+            background: white;
+            color: #34495e;
+        }
+    </style>
+</head>
+<body>
+    <form action="">
+        <fieldset>
+            <legend>Cadastro</legend>
+            <div class="lado-a-lado">
+                <input type="text" id="nome" class="field" placeholder="Nome">
+                <input type="text" id="sobrenome" class="field" placeholder="Sobrenome">
+            </div>
+            <div class="lado-a-lado">
+                <input class="field" id="data_nasc" type="date">
+                <input class="field" id="numero" type="tel" placeholder="Número Celular...">
+            </div>
+            <label for="foto">Foto:</label>
+            <input id="foto" onchange="criptografandoImagem(this)" style="margin: 10px" type="file">
+            <div class="lado-a-lado">
+                <input type="reset" class="btn" value="Limpar">
+                <button id="btn-enviar" class="btn">Enviar</button>
+            </div>
+        </fieldset>
+    </form>
+  <script>
+    var imagem;
+    const teste = document.getElementById('btn-teste');
+    const enviar = document.getElementById('btn-enviar');
+    
+    function criptografandoImagem(element) {
+    var file = element.files[0];
+    var reader = new FileReader();
+    reader.onloadend = function() {
+        imagem = reader.result;
+    }
+    reader.readAsDataURL(file);
+    }
+
+    function salvarPDF(){
+    var arquivo = new jsPDF("p", "mm", "a4");
+    var width = arquivo.internal.pageSize.getWidth();
+    var height = arquivo.internal.pageSize.getHeight();
+    arquivo.text(20, 20, 'Nome:');
+    arquivo.text(40, 20, document.getElementById('nome').value);
+    arquivo.text(20, 30, 'Sobrenome:');
+    arquivo.text(55, 30, document.getElementById('sobrenome').value);
+    arquivo.text(20, 40, 'Data de nascimento:');
+    arquivo.text(75, 40, document.getElementById('data_nasc').value);
+    arquivo.text(20, 50, 'Número de Celular:');
+    arquivo.text(70, 50, document.getElementById('numero').value);
+    arquivo.text(20, 60, 'Foto:');
+    arquivo.addImage(imagem, 'jpg', 40, 65, 150, 200);
+    arquivo.save(document.getElementById('nome').value);
+    }
+
+    enviar.addEventListener('click', salvarPDF);
+    teste.addEventListener('click', function(){console.log(imagem)});
+  </script>
+  <script>
+      $('#numero').mask('(99) 9 9999 - 9999');
+  </script>
+</body>
+</html>
